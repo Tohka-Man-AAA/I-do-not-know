@@ -1,0 +1,50 @@
+body {
+    font-family: Arial,  sans-serif; /* Семейство шрифтов */
+    font-size: 14px; /* Размер основного шрифта в <p></p>  */
+    background-color: #FFFAFA; /* Цвет фона веб-страницы */
+    color: #333333; /* Цвет основного текста */
+    border: 2px solid black;
+}
+h1 {
+    color: #FF0000; /* Цвет заголовка */
+    font-size: 28px; /* Размер шрифта в пунктах */
+    font-family: Stencil Std, fantasy; /* Семейство шрифтов */
+    text-decoration: underline;  /* Добавление подчеркивания */
+    padding: 30px;
+}
+@keyframes color-change {
+    0% {
+      color: blue;
+      font-size:28px;
+      padding: 30px;
+    }
+
+    25% {
+      color: red;
+      font-size:30px;
+      padding: 28px;
+    }
+
+    50% {
+      color: #00FF00;
+      font-size:32px;
+      padding: 26px;
+    }
+
+    75% {
+      color: #8A2BE2;
+      font-size:34px;
+      padding: 24px;
+    }
+
+    100% {
+      color: #FFFF00;
+      font-size:36px;
+      padding: 22px;
+    }
+}
+
+h1:hover{
+    animation: color-change 6s infinite;
+    animation-direction: alternate;
+}
