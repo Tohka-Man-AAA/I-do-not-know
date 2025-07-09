@@ -1,0 +1,74 @@
+import sounddevice as sd
+import numpy as np
+import scipy.io.wavfile as wav
+import speech_recognition as sr
+import random,time
+from googletrans import Translator
+
+words_by_level = {
+    "easy": ["кот", "собака", "яблоко", "молоко", "солнце"],
+    "medium": ["банан", "школа", "зеркало", "окно", "жёлтый"],
+    "hard": ["технология", "университет", "информация", "произношение", "воображение"]
+}
+count_error = 0
+count = 0
+duration = 5
+sample_rate = 44100
+
+
+
+level = input('Выбери уровень сложности(easy, medium, hard)')
+random.shuffle(words_by_level[level])
+for word in words_by_level[level]:
+    #word=random.choice(words_by_level[level])
+    print('Твое слово:', word)
+    print('У тебя есть 5 секунд чтобы вспомнить перевод этого слова')
+    time.sleep(5)
+    print('Говори...')
+    recording = sd.rec(
+        int(duration*sample_rate),
+        samplerate = sample_rate,
+        channels=1,
+        dtype = 'int16')
+    sd.wait()
+    wav.write('output.wav', sample_rate, recording)
+    print('Запись завершена, распознаем...')
+    recognizer = sr.Recognizer()
+    with sr.AudioFile('output.wav') as source:
+        audio = recognizer.record(source)
+    try:
+        audio = recognizer.recognize_google(audio, language='en-En')
+        print('Ты сказал:', audio)
+
+    except sr.UnknownValueError:
+        print('Не удалось распознать речь.')
+    except sr.RequestError as e:
+        print(f'Ошибка сервиса: {e}')
+
+    lower_audio=audio.lower()
+
+    translator = Translator()
+    translated = translator.translate(word, dest='en')
+    #print('Правильный перевод:', word, ':', translated.text)
+
+    if translated.text == lower_audio:
+        print('Верно, молодец!')
+        count += 1
+    else:
+        print('Неправильно, правильный перевод:', translated.text)
+        count_error += 1
+        if count_error >= 3:
+            print('Ты ошибся 3 раза, ты проиграл.')
+            break
+if count == 0 or count>5:
+    print('Ты набрал', count, 'очков')
+if count == 1:
+    print('Ты набрал', count, 'очко')
+if count >1 and count<5:
+    print('Ты набрал', count, 'очка')
+if count_error<3:
+    print('У тебя было столько ошибок:', count_error)
+
+
+
+
